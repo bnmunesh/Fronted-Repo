@@ -1,15 +1,25 @@
 import React from 'react';
+import {socket}  from "../App"
+import { useEffect } from 'react';
 
 const ActionProvider = ({ createChatBotMessage, setState, children }) => {
 
   const handleHello = () => {
-    const botMessage = createChatBotMessage('Hello. Nice to meet you.');
-
-    setState((prev) => ({
-      ...prev,
-      messages: [...prev.messages, botMessage],
-    }));
+    console.log("!!!!")
+    // trial()
   };
+  useEffect(()=>{
+    socket.on("query-response", (data)=>{
+      console.log("data",data)
+      localStorage.setItem("threadID", data.threadID)
+      alert(data.text)
+      let botMessage = createChatBotMessage(data.text);
+      setState((prev) => ({
+        ...prev,
+        messages: [...prev.messages, botMessage],
+        }));
+    })
+  }, [])
 
 
   return (
